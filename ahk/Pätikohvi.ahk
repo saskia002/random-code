@@ -29,8 +29,8 @@ UpdateTray() {
     global isCoffeeHot
     global trayMenu
 
-    onIcon := A_ScriptDir "\icon\coffee_on.ico"
-    offIcon := A_ScriptDir "\icon\coffee_off.ico"
+    onIcon := A_ScriptDir . "\icon\coffee_on.ico"
+    offIcon := A_ScriptDir . "\icon\coffee_off.ico"
 
     if isCoffeeHot {
         trayMenu.Enable("Disable")
@@ -42,20 +42,6 @@ UpdateTray() {
         trayMenu.Disable("Disable")
 
         TraySetIcon(offIcon)
-    }
-}
-
-UpdateTrayIcon() {
-    global isCoffeeHot
-
-    ; Paths to your icons, change paths as needed:
-    onIcon := A_ScriptDir "\coffee_on.ico"
-    offIcon := A_ScriptDir "\coffee_off.ico"
-
-    if isCoffeeHot {
-        trayMenu.SetIcon("", onIcon)  ; Change tray icon to coffee_on.ico
-    } else {
-        trayMenu.SetIcon("", offIcon) ; Change tray icon to coffee_off.ico
     }
 }
 
