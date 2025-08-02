@@ -1,0 +1,59 @@
+RewriteEngine on
+ServerSignature Off
+Options All -Indexes
+RewriteBase /
+FileETag None
+
+RewriteEngine On
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^([^.]+)$ $1.php [NC,L]
+
+# Redirect all traffic from http to https.
+# RewriteCond %{HTTPS} !=on [NC]
+# RewriteRule ^(.\*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Block all direct access to /APP_NAME
+RewriteCond %{REQUEST_URI} ^/APP_NAME [NC]
+RewriteRule .* - [F]
+
+# Custom error documents for 4xx and 5xx errors
+ErrorDocument 400 "Bad Request: The server cannot process the request."
+ErrorDocument 401 "Unauthorized: You must authenticate to access this resource."
+ErrorDocument 403 "Access Denied: lemao."
+ErrorDocument 404 "Not Found: The requested resource was not found on this server."
+ErrorDocument 405 "Method Not Allowed: This HTTP method is not supported."
+ErrorDocument 408 "Request Timeout: The server took too long to respond."
+ErrorDocument 500 "Internal Server Error: Something went wrong on the server."
+ErrorDocument 502 "Bad Gateway: Received an invalid response from an upstream server."
+ErrorDocument 503 "Service Unavailable: The server is temporarily overloaded or down."
+ErrorDocument 504 "Gateway Timeout: The upstream server took too long to respond."
+
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect all requests to public/index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /APP_NAME/public/index.php/$1 [L]
+</IfModule>
+
+<If "%{REQUEST_URI} =~ m#^/node_modules($|/)#">
+    Require all denied
+</If>
+
+<FilesMatch "(\.(bak|config|dist|fla|inc|ini|log|psd|sh|sql|swp|env|md|json)|~)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "script-src 'self' https://www.google.com https://www.gstatic.com; object-src 'self'"
+    Header unset X-Powered-By
+    Header unset ETag
+
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Credentials "true"
+</IfModule>
