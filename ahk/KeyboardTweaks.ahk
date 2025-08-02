@@ -2,7 +2,6 @@
 #SingleInstance Force
 SendMode "Input"
 
-
 ;;;;;;;;; DESKTOP SWITCHER ;;;;;;;;;
 
 ; https://github.com/Ciantic/VirtualDesktopAccessor
@@ -12,6 +11,7 @@ GetDesktopCountProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor,
 
 GetDesktopCount() {
     global GetDesktopCountProc
+
     count := DllCall(GetDesktopCountProc, "Int")
     return count
 }
@@ -23,7 +23,7 @@ SwitchToDesktop(n) {
     if (!hVirtualDesktopAccessor) {
         TrayTip "VirtualDesktopAccessor.dll not found or failed to load.", "Exiting", "Iconx"
         ExitApp
-    }   
+    }
 
     if (n > (GetDesktopCount() - 1)) {
         ; TrayTip "Desktop not available.", "", " Icon!"
@@ -33,9 +33,7 @@ SwitchToDesktop(n) {
     DllCall(GoToDesktopNumberProc, "Int", n)
 }
 
-
 ;;;;;;;;; DESKTOP SWITCHER END ;;;;;;;;;
-
 
 ;;;;;;;;; KEY REMAP ;;;;;;;;;
 
@@ -44,32 +42,30 @@ SwitchToDesktop(n) {
 ; Shift  := "+"
 ; Win    := "#"
 
-#1::SwitchToDesktop(0)
-#2::SwitchToDesktop(1)
-#3::SwitchToDesktop(2)
-#4::SwitchToDesktop(3)
+#1:: SwitchToDesktop(0)
+#2:: SwitchToDesktop(1)
+#3:: SwitchToDesktop(2)
+#4:: SwitchToDesktop(3)
 
 ^,::
 <^>!,::
 {
-	SendInput "<"
-	Return
+    SendInput "<"
+    return
 }
 
 ^.::
 <^>!.::
 {
-	SendInput ">"
-	Return
+    SendInput ">"
+    return
 }
-
 
 ^'::
 <^>!'::
 {
-	SendInput "|"
-	Return
+    SendInput "|"
+    return
 }
 
 ;;;;;;;;; KEY REMAP END ;;;;;;;;;
-
