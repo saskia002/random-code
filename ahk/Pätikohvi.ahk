@@ -18,23 +18,44 @@ BuildTrayMenu() {
     trayMenu.Add("Exit", ExitAppCallback)
     trayMenu.ClickCallback := TrayCallback
 
-    UpdateTrayItems()
+    UpdateTray()
 }
 
 TrayCallback(ItemName, ItemPos, Menu) {
-    UpdateTrayItems()
+    UpdateTray()
 }
 
-UpdateTrayItems() {
+UpdateTray() {
     global isCoffeeHot
     global trayMenu
+
+    onIcon := A_ScriptDir "\icon\coffee_on.ico"
+    offIcon := A_ScriptDir "\icon\coffee_off.ico"
 
     if isCoffeeHot {
         trayMenu.Enable("Disable")
         trayMenu.Disable("Enable")
+
+        TraySetIcon(onIcon)
     } else {
         trayMenu.Enable("Enable")
         trayMenu.Disable("Disable")
+
+        TraySetIcon(offIcon)
+    }
+}
+
+UpdateTrayIcon() {
+    global isCoffeeHot
+
+    ; Paths to your icons, change paths as needed:
+    onIcon := A_ScriptDir "\coffee_on.ico"
+    offIcon := A_ScriptDir "\coffee_off.ico"
+
+    if isCoffeeHot {
+        trayMenu.SetIcon("", onIcon)  ; Change tray icon to coffee_on.ico
+    } else {
+        trayMenu.SetIcon("", offIcon) ; Change tray icon to coffee_off.ico
     }
 }
 
@@ -42,7 +63,7 @@ StartCoffee(*) {
     global isCoffeeHot
 
     isCoffeeHot := 1
-    UpdateTrayItems()
+    UpdateTray()
     loop {
         if !isCoffeeHot {
             break
@@ -56,7 +77,7 @@ StopCoffee(*) {
     global isCoffeeHot
 
     isCoffeeHot := 0
-    UpdateTrayItems()
+    UpdateTray()
 }
 
 ExitAppCallback(*) {
