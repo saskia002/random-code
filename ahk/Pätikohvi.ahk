@@ -36,12 +36,12 @@ UpdateTray() {
         trayMenu.Enable("Disable")
         trayMenu.Disable("Enable")
 
-        TraySetIcon(onIcon)
+        TraySetIcon onIcon
     } else {
         trayMenu.Enable("Enable")
         trayMenu.Disable("Disable")
 
-        TraySetIcon(offIcon)
+        TraySetIcon offIcon
     }
 }
 

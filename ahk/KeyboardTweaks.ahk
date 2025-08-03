@@ -8,6 +8,21 @@ SendMode "Input"
 hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", A_ScriptDir . "\dll\VirtualDesktopAccessor.dll", "Ptr")
 GoToDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GoToDesktopNumber", "Ptr")
 GetDesktopCountProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetDesktopCount", "Ptr")
+GetCurrentDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetCurrentDesktopNumber", "Ptr")
+
+init() {
+    global GetCurrentDesktopNumberProc
+    currentDesktop := DllCall(GetCurrentDesktopNumberProc, "Int")
+
+    setTrayIcon(currentDesktop)
+}
+
+setTrayIcon(desktopNumber) {
+    trayMenu := A_TrayMenu
+    iconFolder := A_ScriptDir . "\icon\"
+
+    TraySetIcon iconFolder . desktopNumber . ".ico"
+}
 
 GetDesktopCount() {
     global GetDesktopCountProc
@@ -16,7 +31,7 @@ GetDesktopCount() {
     return count
 }
 
-SwitchToDesktop(n) {
+SwitchToDesktop(desktop) {
     global GoToDesktopNumberProc
     global hVirtualDesktopAccessor
 
@@ -25,13 +40,17 @@ SwitchToDesktop(n) {
         ExitApp
     }
 
-    if (n > (GetDesktopCount() - 1)) {
+    if (desktop > (GetDesktopCount() - 1)) {
         ; TrayTip "Desktop not available.", "", " Icon!"
         return
     }
 
-    DllCall(GoToDesktopNumberProc, "Int", n)
+    setTrayIcon(desktop)
+
+    DllCall(GoToDesktopNumberProc, "Int", desktop)
 }
+
+init()
 
 ;;;;;;;;; DESKTOP SWITCHER END ;;;;;;;;;
 
