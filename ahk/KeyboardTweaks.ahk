@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 SendMode "Input"
+;Persistent
 
 ;;;;;;;;; DESKTOP SWITCHER ;;;;;;;;;
 
